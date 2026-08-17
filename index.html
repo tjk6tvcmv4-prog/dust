@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#20252b" />
+    <title>Focus Flow | 番茄钟</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#focus" aria-label="Focus Flow 首页">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>Focus Flow</span>
+        </a>
+
+        <nav class="page-nav" aria-label="主导航">
+          <button class="nav-link active" type="button" data-view="focus">专注</button>
+          <button class="nav-link" type="button" data-view="stats">统计</button>
+        </nav>
+
+        <div class="topbar-actions">
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="切换深浅色模式" title="切换深浅色模式">
+            <span aria-hidden="true">◐</span>
+          </button>
+          <button class="icon-button" id="settings-button" type="button" aria-label="打开设置" title="设置">
+            <span aria-hidden="true">⚙</span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="view active" id="focus-view" data-view-panel="focus">
+          <div class="workspace-heading">
+            <div>
+              <p class="eyebrow">FOCUS SESSION</p>
+              <h1>保持节奏，完成当下。</h1>
+            </div>
+            <p class="date-label" id="today-label"></p>
+          </div>
+
+          <div class="focus-grid">
+            <section class="timer-panel" aria-labelledby="timer-title">
+            <div class="panel-header">
+                <div>
+                  <p class="panel-kicker" id="timer-mode-label">专注模式</p>
+                  <h2 id="timer-title">番茄钟</h2>
+                </div>
+                <span class="status-pill" id="timer-status">准备开始</span>
+              </div>
+
+              <div class="mode-switcher" role="group" aria-label="计时模式">
+                <button class="mode-option active" type="button" data-timer-mode="focus">专注</button>
+                <button class="mode-option" type="button" data-timer-mode="short">短休息</button>
+                <button class="mode-option" type="button" data-timer-mode="long">长休息</button>
+              </div>
+
+              <div class="current-task">
+                <span class="current-task-label">当前任务</span>
+                <strong id="current-task-name">未选择任务</strong>
+              </div>
+
+              <div class="timer-system" id="timer-system">
+                <div class="orbit-ticks" aria-hidden="true"></div>
+                <div class="timer-orbit" id="timer-orbit" role="timer" aria-live="polite">
+                <div class="timer-core">
+                  <span class="timer-time" id="timer-display">25:00</span>
+                  <span class="timer-caption" id="timer-caption">准备专注</span>
+                </div>
+                </div>
+              </div>
+
+              <div class="timer-controls" aria-label="计时器控制">
+                <button class="control-button secondary" id="reset-timer" type="button" title="重置计时器">↺</button>
+                <button class="control-button primary" id="start-pause" type="button">开始专注</button>
+              </div>
+
+              <p class="timer-hint" id="timer-hint">完成一个专注周期后，将进入休息模式。</p>
+              <div class="completion-flash" aria-hidden="true"><span>✓</span></div>
+            </section>
+
+            <section class="tasks-panel" aria-labelledby="tasks-title">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">TODAY'S PLAN</p>
+                  <h2 id="tasks-title">任务清单</h2>
+                </div>
+                <span class="task-count" id="task-count">0 项</span>
+              </div>
+
+              <form class="task-form" id="task-form">
+                <label class="sr-only" for="new-task">添加任务</label>
+                <input id="new-task" name="task" maxlength="80" placeholder="输入下一件要完成的事" autocomplete="off" required />
+                <button type="submit" aria-label="添加任务" title="添加任务">+</button>
+              </form>
+
+              <div class="task-list" id="task-list" aria-live="polite"></div>
+              <p class="empty-state" id="task-empty-state">还没有任务。先写下第一件事。</p>
+            </section>
+          </div>
+
+          <section class="overview" aria-labelledby="overview-title">
+            <div class="overview-title">
+              <p class="panel-kicker">TODAY AT A GLANCE</p>
+              <h2 id="overview-title">今日概览</h2>
+            </div>
+            <div class="metric-grid">
+              <article class="metric">
+                <span>完成番茄</span>
+                <strong id="today-pomodoros">0</strong>
+                <small>个专注周期</small>
+              </article>
+              <article class="metric">
+                <span>专注时长</span>
+                <strong id="today-minutes">0<span>min</span></strong>
+                <small>已完成的专注时间</small>
+              </article>
+              <article class="metric">
+                <span>完成任务</span>
+                <strong id="today-tasks">0</strong>
+                <small>今天标记完成</small>
+              </article>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="stats-view" data-view-panel="stats">
+          <div class="workspace-heading stats-heading">
+            <div>
+              <p class="eyebrow">LEARNING INSIGHTS</p>
+              <h1>看见每一次持续专注。</h1>
+            </div>
+            <div class="segmented-control" role="group" aria-label="统计范围">
+              <button class="segment active" type="button" data-range="week">本周</button>
+              <button class="segment" type="button" data-range="day">今日</button>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <section class="chart-panel" aria-labelledby="chart-title">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">FOCUS TREND</p>
+                  <h2 id="chart-title">专注时长</h2>
+                </div>
+                <strong class="chart-total" id="chart-total">0 min</strong>
+              </div>
+              <div class="chart" id="focus-chart" aria-label="专注时长柱状图"></div>
+            </section>
+
+            <section class="completion-panel" aria-labelledby="completion-title">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">TASK PROGRESS</p>
+                  <h2 id="completion-title">任务完成情况</h2>
+                </div>
+              </div>
+              <div class="completion-value">
+                <strong id="completion-rate">0%</strong>
+                <span>完成率</span>
+              </div>
+              <div class="completion-track" aria-hidden="true"><i id="completion-bar"></i></div>
+              <p class="completion-copy" id="completion-copy">今天还没有创建任务。</p>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+      <form method="dialog" class="settings-card" id="settings-form">
+        <div class="dialog-header">
+          <div>
+            <p class="panel-kicker">PREFERENCES</p>
+            <h2 id="settings-title">专注设置</h2>
+          </div>
+          <button class="icon-button" value="cancel" type="submit" aria-label="关闭设置" title="关闭">×</button>
+        </div>
+
+        <div class="setting-fields">
+          <label class="duration-control">
+            <span>专注时长 <output id="focus-duration-output">25 分钟</output></span>
+            <input id="focus-duration" type="range" min="1" max="120" step="1" value="25" />
+          </label>
+          <label class="duration-control">
+            <span>短休息 <output id="short-duration-output">5 分钟</output></span>
+            <input id="short-duration" type="range" min="1" max="60" step="1" value="5" />
+          </label>
+          <label class="duration-control">
+            <span>长休息 <output id="long-duration-output">15 分钟</output></span>
+            <input id="long-duration" type="range" min="1" max="90" step="1" value="15" />
+          </label>
+        </div>
+
+        <div class="notification-setting">
+          <div>
+            <strong>浏览器提醒</strong>
+            <p id="notification-status">计时结束时显示系统通知。</p>
+          </div>
+          <label class="switch-control" title="切换浏览器提醒">
+            <input id="notification-toggle" type="checkbox" aria-label="切换浏览器提醒" />
+            <span aria-hidden="true"></span>
+          </label>
+        </div>
+
+        <div class="dialog-actions">
+          <button class="text-button" value="cancel" type="submit">取消</button>
+          <button class="save-button" id="save-settings" value="default" type="submit">保存设置</button>
+        </div>
+      </form>
+    </dialog>
+
+    <template id="task-template">
+      <article class="task-item">
+        <button class="task-check" type="button" aria-label="标记任务完成"></button>
+        <button class="task-select" type="button"></button>
+        <div class="task-actions">
+          <button class="task-action" data-action="edit" type="button" aria-label="编辑任务" title="编辑任务">✎</button>
+          <button class="task-action danger" data-action="delete" type="button" aria-label="删除任务" title="删除任务">×</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
